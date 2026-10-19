@@ -8,7 +8,7 @@ export default function BigHero6Banner() {
       }}
     >
       {/* ── DISNEY WORDMARK (FROM PUBLIC FOLDER) ───────── */}
-      <div className="w-20 mb-1 flex justify-center translate-x-3.5">
+      <div className="w-20 mb-1 flex justify-center">
         <img
           src="/disney.png"
           onError={(e) => {
@@ -86,7 +86,7 @@ export default function BigHero6Banner() {
           className="text-white font-oswald font-black text-[16px] tracking-[0.14em] uppercase leading-none mt-0.5"
           style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}
         >
-          November 7
+          October 24
         </span>
       </div>
 

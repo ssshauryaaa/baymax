@@ -207,10 +207,18 @@ export default function BaymaxDiagnostics() {
                     ))}
                   </div>
                 </div>
-
                 <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                  <span className="font-cond text-[10.5px] text-white/70">
-                    {healingApplied ? '✓ Treatment administered successfully' : 'Need comfort protocol?'}
+                  <span className="font-cond text-[10.5px] text-white/70 flex items-center gap-1.5">
+                    {healingApplied ? (
+                      <>
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#2dd4bf" strokeWidth="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span>Treatment administered successfully</span>
+                      </>
+                    ) : (
+                      'Need comfort protocol?'
+                    )}
                   </span>
                   <button
                     onClick={applyTreatment}

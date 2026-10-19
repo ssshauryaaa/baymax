@@ -79,7 +79,9 @@ export default function TeamCommsModal({ charId, onClose, onSelectChar }) {
             className="w-7 h-7 rounded flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close transmission"
           >
-            ✕
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
           </button>
         </div>
 

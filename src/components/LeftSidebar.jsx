@@ -1,24 +1,30 @@
 import { useState, useEffect } from 'react'
 import BigHero6Banner from './BigHero6Banner'
 
-const TARGET = new Date('2024-11-07T00:00:00').getTime()
 function pad(n) { return String(Math.max(0, n)).padStart(2, '0') }
 
 function useCountdown() {
-  const [t, setT] = useState({ days: 0, hours: 0, min: 0, sec: 0 })
+  const [t, setT] = useState({ days: 16, hours: 7, min: 25, sec: 14 })
   useEffect(() => {
-    const tick = () => {
-      const diff = TARGET - Date.now()
-      if (diff <= 0) return
-      setT({
-        days:  Math.floor(diff / 86400000),
-        hours: Math.floor((diff % 86400000) / 3600000),
-        min:   Math.floor((diff % 3600000)  / 60000),
-        sec:   Math.floor((diff % 60000)    / 1000),
+    const id = setInterval(() => {
+      setT(prev => {
+        let { days, hours, min, sec } = prev
+        sec--
+        if (sec < 0) {
+          sec = 59
+          min--
+          if (min < 0) {
+            min = 59
+            hours--
+            if (hours < 0) {
+              hours = 23
+              days = Math.max(0, days - 1)
+            }
+          }
+        }
+        return { days, hours, min, sec }
       })
-    }
-    tick()
-    const id = setInterval(tick, 1000)
+    }, 1000)
     return () => clearInterval(id)
   }, [])
   return t
@@ -72,10 +78,58 @@ export default function LeftSidebar({ slide = 0, setSlide = () => {}, onTrailer 
             <SectionTitle id="sb-mission">Mission Protocols</SectionTitle>
             <div className="flex flex-col gap-1">
               {[
-                { id: 'story', label: 'Story Chronicle', icon: '📖' },
-                { id: 'diagnostics', label: 'Baymax Care Hub', icon: '🩺' },
-                { id: 'codex', label: 'Dimension Codex', icon: '🌌' },
-                { id: 'radar', label: 'Escape Radar', icon: '🧭' },
+                {
+                  id: 'story',
+                  label: 'Story Chronicle',
+                  icon: (
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: 'diagnostics',
+                  label: 'Baymax Care Hub',
+                  icon: (
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: 'codex',
+                  label: 'Dimension Codex',
+                  icon: (
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                      <polyline points="2 17 12 22 22 17" />
+                      <polyline points="2 12 12 17 22 12" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: 'radar',
+                  label: 'Escape Radar',
+                  icon: (
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="2" x2="12" y2="22" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: 'comms',
+                  label: 'Comms Relay',
+                  icon: (
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4.93 19.07A10 10 0 0 1 12 2a10 10 0 0 1 7.07 17.07" />
+                      <path d="M7.76 16.24A6 6 0 0 1 12 6a6 6 0 0 1 4.24 10.24" />
+                      <circle cx="12" cy="16" r="2" fill="currentColor" />
+                    </svg>
+                  ),
+                },
               ].map(item => (
                 <button
                   key={item.id}
@@ -86,7 +140,7 @@ export default function LeftSidebar({ slide = 0, setSlide = () => {}, onTrailer 
                       : 'text-white/60 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <span className="text-[11px]">{item.icon}</span>
+                  <span className="flex-shrink-0">{item.icon}</span>
                   <span className="truncate">{item.label}</span>
                 </button>
               ))}
@@ -146,9 +200,15 @@ export default function LeftSidebar({ slide = 0, setSlide = () => {}, onTrailer 
             aria-label="Watch the trailer"
             className={`group flex items-center gap-2 border border-white/40 hover:border-white bg-black/30 hover:bg-black/55 p-[2px] transition-all duration-200 ${ring}`}
           >
-            <div className="relative w-10 h-10 flex-shrink-0 border border-white/25 bg-gradient-to-tr from-black/80 via-slate-800/60 to-slate-700/40 overflow-hidden flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full border border-white/80 flex items-center justify-center bg-black/30 group-hover:scale-110 transition-transform duration-200">
-                <svg viewBox="0 0 24 24" width="11" height="11" fill="white" className="ml-0.5" aria-hidden="true">
+            <div className="relative w-12 h-10 flex-shrink-0 border border-white/35 bg-slate-900 overflow-hidden flex items-center justify-center">
+              <img
+                src="/hiro-baymax-armor.png"
+                alt="Trailer preview"
+                className="w-full h-full object-cover object-left scale-125"
+              />
+              <div className="absolute inset-0 bg-black/25" />
+              <div className="absolute w-5 h-5 rounded-full border border-white/90 flex items-center justify-center bg-black/50 group-hover:scale-110 transition-transform duration-200">
+                <svg viewBox="0 0 24 24" width="9" height="9" fill="white" className="ml-0.5" aria-hidden="true">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
               </div>

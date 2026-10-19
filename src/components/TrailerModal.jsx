@@ -25,9 +25,11 @@ export default function TrailerModal({ onClose }) {
           id="modal-close"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all duration-200 text-sm"
+          className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all duration-200"
         >
-          ✕
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
         </button>
 
         {/* Faux video area */}
