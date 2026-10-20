@@ -3,30 +3,35 @@ import BigHero6Banner from './BigHero6Banner'
 
 function pad(n) { return String(Math.max(0, n)).padStart(2, '0') }
 
+function calculateTimeToOct24() {
+  const now = new Date()
+  // Target: October 24 00:00:00 (Month 9 is October in 0-indexed Date)
+  let target = new Date(now.getFullYear(), 9, 24, 0, 0, 0)
+  
+  // If October 24 of the current year has already passed by more than 24h, target next year
+  if (now.getTime() > target.getTime() + 86400000) {
+    target = new Date(now.getFullYear() + 1, 9, 24, 0, 0, 0)
+  }
+
+  const diff = Math.max(0, target.getTime() - now.getTime())
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+  const min = Math.floor((diff / (1000 * 60)) % 60)
+  const sec = Math.floor((diff / 1000) % 60)
+  return { days, hours, min, sec }
+}
+
 function useCountdown() {
-  const [t, setT] = useState({ days: 16, hours: 7, min: 25, sec: 14 })
+  const [t, setT] = useState(calculateTimeToOct24)
+
   useEffect(() => {
+    // Keep live countdown accurately synced to system clock every second
     const id = setInterval(() => {
-      setT(prev => {
-        let { days, hours, min, sec } = prev
-        sec--
-        if (sec < 0) {
-          sec = 59
-          min--
-          if (min < 0) {
-            min = 59
-            hours--
-            if (hours < 0) {
-              hours = 23
-              days = Math.max(0, days - 1)
-            }
-          }
-        }
-        return { days, hours, min, sec }
-      })
+      setT(calculateTimeToOct24())
     }, 1000)
     return () => clearInterval(id)
   }, [])
+
   return t
 }
 

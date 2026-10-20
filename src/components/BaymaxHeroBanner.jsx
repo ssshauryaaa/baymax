@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 /* ── FLOATING PARTICLE COMPONENT ──────────────────────────── */
-function FloatingParticle({ delay, x, y, size = 3 }) {
+function FloatingParticle({ delay, x, y, size = 3, duration = 5 }) {
   return (
     <motion.div
       className="absolute rounded-full pointer-events-none"
@@ -15,14 +15,14 @@ function FloatingParticle({ delay, x, y, size = 3 }) {
       }}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
-        opacity: [0, 0.8, 0.3, 0.8, 0],
-        scale: [0.5, 1.2, 0.8, 1.3, 0.5],
-        y: [0, -15, -8, -20, 0],
+        opacity: [0, 0.75, 0.35, 0.8, 0],
+        scale: [0.6, 1.2, 0.85, 1.25, 0.6],
+        y: [0, -14, -7, -20, 0],
       }}
       transition={{
-        duration: 4 + Math.random() * 3,
+        duration,
         repeat: Infinity,
-        delay: delay,
+        delay,
         ease: 'easeInOut',
       }}
     />
@@ -33,13 +33,14 @@ function FloatingParticle({ delay, x, y, size = 3 }) {
 function ScanLine() {
   return (
     <motion.div
-      className="absolute left-0 right-0 h-px pointer-events-none"
+      className="absolute left-0 right-0 h-[2px] pointer-events-none z-10"
       style={{
-        background: 'linear-gradient(90deg, transparent 0%, rgba(214,32,39,0.4) 20%, rgba(214,32,39,0.8) 50%, rgba(214,32,39,0.4) 80%, transparent 100%)',
+        background: 'linear-gradient(90deg, transparent 0%, rgba(214,32,39,0.3) 25%, rgba(214,32,39,0.85) 50%, rgba(214,32,39,0.3) 75%, transparent 100%)',
+        boxShadow: '0 0 10px rgba(214,32,39,0.5)',
       }}
       initial={{ top: '0%', opacity: 0 }}
-      animate={{ top: ['0%', '100%', '0%'], opacity: [0, 0.6, 0] }}
-      transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+      animate={{ top: ['0%', '100%', '0%'], opacity: [0, 0.7, 0] }}
+      transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
     />
   )
 }
@@ -129,9 +130,9 @@ export default function BaymaxHeroBanner({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-40"
           />
 
           {/* Floating Hero Banner Panel */}
@@ -139,16 +140,17 @@ export default function BaymaxHeroBanner({
             <motion.div
               key="baymax-banner-card"
               id="baymax-waving-hero"
-              className="relative w-full max-w-6xl select-none rounded-2xl overflow-hidden pointer-events-auto shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(214,32,39,0.35)] border border-[#d62027]/40 max-h-[calc(100vh-5.5rem)] overflow-y-auto"
+              className="relative w-full max-w-6xl select-none rounded-2xl overflow-hidden pointer-events-auto border border-white/35 max-h-[calc(100vh-5.5rem)] overflow-y-auto"
               style={{
-                background: 'linear-gradient(180deg, rgba(16, 26, 42, 0.97) 0%, rgba(28, 42, 60, 0.96) 50%, rgba(16, 26, 42, 0.98) 100%)',
-                backdropFilter: 'blur(28px) saturate(160%)',
-                WebkitBackdropFilter: 'blur(28px) saturate(160%)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(240, 246, 252, 0.2) 100%)',
+                backdropFilter: 'blur(32px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                boxShadow: '0 30px 70px -15px rgba(15, 23, 42, 0.35), 0 0 35px rgba(214, 32, 39, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4)',
               }}
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
+              initial={{ opacity: 0, y: -16, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+              exit={{ opacity: 0, y: -16, scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 26, mass: 0.85 }}
             >
           {/* ── SCAN LINE ── */}
           <ScanLine />
@@ -298,9 +300,11 @@ export default function BaymaxHeroBanner({
                     boxShadow: '0 0 30px rgba(214, 32, 39, 0.15), inset 0 0 40px rgba(0,0,0,0.3)',
                   }}
                 >
-                  <img
+                  <motion.img
                     src="/baymax-hero-banner.png"
                     alt="Baymax Waving"
+                    animate={{ y: [-4, 4, -4], scale: [1, 1.018, 1] }}
+                    transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
                   />
                   {/* Gradient Overlay */}
@@ -484,15 +488,15 @@ export default function BaymaxHeroBanner({
               >
                 {/* Telemetry Stats Row */}
                 <div
-                  className="rounded-xl p-4"
+                  className="rounded-xl p-4 backdrop-blur-md"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.12)',
+                    border: '1px solid rgba(255,255,255,0.22)',
                   }}
                 >
                   <div className="flex items-center gap-1.5 mb-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#d62027]" />
-                    <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-white/40">VITAL TELEMETRY</span>
+                    <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-white/70 font-semibold">VITAL TELEMETRY</span>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <TelemetryStat label="Heart Rate" value="72" unit="BPM" delay={0} />
@@ -504,10 +508,10 @@ export default function BaymaxHeroBanner({
 
                 {/* Neural Link Bars */}
                 <div
-                  className="rounded-xl p-4"
+                  className="rounded-xl p-4 backdrop-blur-md"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.12)',
+                    border: '1px solid rgba(255,255,255,0.22)',
                   }}
                 >
                   <div className="flex items-center gap-1.5 mb-3">
@@ -516,7 +520,7 @@ export default function BaymaxHeroBanner({
                       animate={{ opacity: [1, 0.5, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-white/40">NEURAL LINK</span>
+                    <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-white/70 font-semibold">NEURAL LINK</span>
                   </div>
                   <div className="flex flex-col gap-2">
                     <NeuralLinkBar label="Motor" percentage={98} delay={0} />

@@ -324,38 +324,79 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={`char-${chapter.num}`}
-              initial={{ opacity: 0, scale: 0.94, y: 10 }}
+              initial={{ opacity: 0, scale: 0.96, y: 14 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: -10 }}
-              transition={{ duration: 0.35, ease: 'easeOut' }}
+              exit={{ opacity: 0, scale: 0.96, y: -14 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 w-full max-w-[480px] flex flex-col items-center justify-center"
             >
               {/* Character Main Visual Container */}
               <div
-                className="relative max-h-[48vh] sm:max-h-[54vh] flex items-center justify-center group cursor-pointer"
+                className="relative max-h-[48vh] sm:max-h-[54vh] flex flex-col items-center justify-center group cursor-pointer"
                 onClick={speakQuote}
               >
-                {/* Subtle Glow Behind Character */}
-                <div
+                {/* Subtle Radial Glow Behind Character */}
+                <motion.div
                   className="absolute inset-0 rounded-full blur-3xl opacity-35 pointer-events-none"
                   style={{ background: chapter.accent }}
+                  animate={{
+                    opacity: [0.25, 0.42, 0.25],
+                    scale: [0.95, 1.06, 0.95],
+                  }}
+                  transition={{
+                    duration: 4.8,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
                 />
 
-                {/* Character Image */}
+                {/* Character Hero Image with Organic Smooth Floating */}
                 <motion.img
                   src={chapter.charImage}
                   alt={chapter.charAlt}
                   animate={
                     idx === 1
-                      ? { y: [-8, 8, -8], rotate: [-2, 2, -2] }
-                      : { y: [0, -4, 0] }
+                      ? {
+                          y: [-12, 10, -12],
+                          rotate: [-2, 1.8, -2],
+                          scale: [1, 1.018, 0.992, 1],
+                        }
+                      : idx === 2
+                      ? {
+                          y: [-7, 7, -7],
+                          scale: [1, 1.025, 1],
+                        }
+                      : idx === 3
+                      ? {
+                          y: [-9, 9, -9],
+                          rotate: [-1, 1.5, -1],
+                        }
+                      : {
+                          y: [-6, 6, -6],
+                          scale: [1, 1.012, 1],
+                        }
                   }
                   transition={{
-                    duration: idx === 1 ? 5 : 3.5,
+                    duration: idx === 1 ? 6.5 : idx === 2 ? 4.5 : 4,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: [0.45, 0.05, 0.55, 0.95],
                   }}
-                  className="max-h-[44vh] sm:max-h-[50vh] w-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] group-hover:scale-[1.02] transition-transform duration-300"
+                  className="max-h-[44vh] sm:max-h-[50vh] w-auto object-contain drop-shadow-[0_22px_40px_rgba(0,0,0,0.38)] group-hover:scale-[1.02] transition-transform duration-300 relative z-10"
+                />
+
+                {/* Dynamic Spatial Contact Shadow */}
+                <motion.div
+                  className="w-44 sm:w-56 h-5 sm:h-6 rounded-[100%] bg-black/40 blur-md pointer-events-none -mt-2 z-0"
+                  animate={
+                    idx === 1
+                      ? { scale: [0.82, 1.15, 0.82], opacity: [0.18, 0.42, 0.18] }
+                      : { scale: [0.9, 1.08, 0.9], opacity: [0.25, 0.4, 0.25] }
+                  }
+                  transition={{
+                    duration: idx === 1 ? 6.5 : 4.5,
+                    repeat: Infinity,
+                    ease: [0.45, 0.05, 0.55, 0.95],
+                  }}
                 />
 
                 {/* Secondary Team Character Hologram if present (e.g. Chapter 5 Comms) */}
@@ -363,7 +404,7 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl border-2 border-red-400 bg-black/60 backdrop-blur-md p-1 shadow-lg flex flex-col items-center justify-center overflow-hidden"
+                    className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl border-2 border-red-400 bg-black/60 backdrop-blur-md p-1 shadow-lg flex flex-col items-center justify-center overflow-hidden z-20"
                   >
                     <img src={chapter.secondaryCharImage} alt="Team Comms" className="w-full h-full object-contain" />
                     <div className="absolute bottom-0 inset-x-0 bg-red-600/90 text-center py-0.5">
@@ -375,7 +416,7 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
                 {/* Interactive Dynamic Overlays by Chapter */}
                 {/* Ch 1: Blinking Chip in hand */}
                 {idx === 0 && (
-                  <div className="absolute top-[32%] right-[24%] pointer-events-none flex items-center justify-center">
+                  <div className="absolute top-[32%] right-[24%] pointer-events-none flex items-center justify-center z-20">
                     <span className="w-5 h-5 rounded-full bg-emerald-400 animate-ping absolute opacity-75" />
                     <span className="w-3 h-3 rounded-full bg-emerald-400 relative shadow-[0_0_12px_#10B981]" />
                   </div>
@@ -383,7 +424,7 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
 
                 {/* Ch 2: Empty Chest Port Ring */}
                 {idx === 1 && (
-                  <div className="absolute top-[42%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2">
+                  <div className="absolute top-[42%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2 z-20">
                     <span className="w-8 h-8 rounded-full border-2 border-dashed border-sky-400 animate-spin absolute" />
                     <span className="w-4 h-4 rounded-full border border-sky-300 opacity-60" />
                   </div>
@@ -391,7 +432,7 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
 
                 {/* Ch 3: Glowing Chest Healthcare Beacon */}
                 {idx === 2 && (
-                  <div className="absolute top-[48%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2">
+                  <div className="absolute top-[48%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2 z-20">
                     <span className="w-12 h-12 rounded-full bg-emerald-400/30 animate-ping absolute" />
                     <span className="w-5 h-5 rounded-full bg-emerald-400 relative shadow-[0_0_18px_#10B981]" />
                   </div>
@@ -399,7 +440,7 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
 
                 {/* Ch 6: Dual Thruster Fire Exhaust */}
                 {idx === 5 && (
-                  <div className="absolute bottom-6 inset-x-0 flex justify-center gap-10 pointer-events-none">
+                  <div className="absolute bottom-6 inset-x-0 flex justify-center gap-10 pointer-events-none z-20">
                     <div className="w-3 h-12 bg-gradient-to-t from-transparent via-amber-400 to-red-500 rounded-full blur-[2px] animate-pulse" />
                     <div className="w-3 h-12 bg-gradient-to-t from-transparent via-amber-400 to-red-500 rounded-full blur-[2px] animate-pulse" />
                   </div>
