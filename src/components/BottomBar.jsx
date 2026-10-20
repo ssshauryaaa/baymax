@@ -57,7 +57,7 @@ export function CharIcon({ id }) {
   }
 }
 
-export default function BottomBar({ audioOn, toggle, chars, activeChar, setActiveChar, onOpenCharComms }) {
+export default function BottomBar({ audioOn, toggle }) {
   return (
     <footer className="flex items-center justify-between flex-shrink-0 h-10 px-5 border-t border-white/10 bg-black/25 backdrop-blur-sm z-20">
 
@@ -81,31 +81,6 @@ export default function BottomBar({ audioOn, toggle, chars, activeChar, setActiv
           Audio: {audioOn ? 'On' : 'Off'}
         </span>
       </button>
-
-      {/* ── 6 CHARACTER ICONS (CENTER) ────────────────── */}
-      {chars && (
-        <div className="flex items-center gap-4">
-          {chars.map((c, i) => (
-            <button
-              key={c.id}
-              id={`char-${i}`}
-              onClick={() => {
-                setActiveChar(i)
-                onOpenCharComms?.(c.id)
-              }}
-              aria-label={c.label}
-              title={`Open ${c.label} Comms Transmission`}
-              className={`flex items-center justify-center p-1 rounded-full transition-all duration-200 ${
-                activeChar === i
-                  ? 'text-white scale-110 bg-white/20 shadow-sm'
-                  : 'text-white/40 hover:text-white/80 hover:scale-105'
-              }`}
-            >
-              <CharIcon id={c.id} />
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* ── LEGAL DROPDOWN (RIGHT) ─────────────────────── */}
       <a

@@ -14,23 +14,13 @@ import CommsPage from './components/CommsPage'
 
 const TOTAL_CHAPTERS = 6
 
-const CHARS = [
-  { id: 'baymax', label: 'Baymax' },
-  { id: 'hiro', label: 'Hiro' },
-  { id: 'honey-lemon', label: 'Honey Lemon' },
-  { id: 'gogo', label: 'Go Go' },
-  { id: 'wasabi', label: 'Wasabi' },
-  { id: 'fred', label: 'Fred' },
-]
-
 export default function App() {
   const [currentPage, setCurrentPage] = useState('story')
   const [slide, setSlide] = useState(0)
-  const [activeChar, setActiveChar] = useState(0)
   const [audioOn, setAudioOn] = useState(true)
   const [trailerOpen, setTrailerOpen] = useState(false)
   const [commsChar, setCommsChar] = useState(null)
-  const [showBaymaxBanner, setShowBaymaxBanner] = useState(true)
+  const [showBaymaxBanner, setShowBaymaxBanner] = useState(false)
 
   const goNext = () => setSlide(s => Math.min(s + 1, TOTAL_CHAPTERS - 1))
   const goPrev = () => setSlide(s => Math.max(s - 1, 0))
@@ -100,18 +90,14 @@ export default function App() {
 
         </div>
 
-        {/* Right Navigation Reticle / Compass */}
-        <RightNav compassAngle={slide * 60} />
+        {/* Right Navigation Reticle / Compass (Story Page only) */}
+        {currentPage === 'story' && <RightNav compassAngle={slide * 60} />}
       </div>
 
-      {/* ── BOTTOM DOCK WITH 6 CHARACTERS, AUDIO, LEGAL ──────── */}
+      {/* ── BOTTOM DOCK (AUDIO, LEGAL) ─────────────────────── */}
       <BottomBar
         audioOn={audioOn}
         toggle={() => setAudioOn(v => !v)}
-        chars={CHARS}
-        activeChar={activeChar}
-        setActiveChar={setActiveChar}
-        onOpenCharComms={(charId) => setCommsChar(charId)}
       />
 
       {/* ── MODALS ───────────────────────────────────────────── */}

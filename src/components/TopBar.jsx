@@ -19,7 +19,7 @@ export default function TopBar({
     <header
       role="banner"
       aria-label="Main Navigation"
-      className="mx-2 sm:mx-3 mt-2 sm:mt-2.5 mb-1.5 h-12 rounded-xl flex items-center justify-between px-3 sm:px-5 z-40 select-none flex-shrink-0 transition-all duration-300"
+      className="mx-2 sm:mx-3 mt-2 sm:mt-2.5 mb-1.5 h-12 rounded-xl flex items-center justify-between px-3 sm:px-5 relative z-50 select-none flex-shrink-0 transition-all duration-300"
       style={{
         background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%)',
         backdropFilter: 'blur(20px) saturate(160%)',

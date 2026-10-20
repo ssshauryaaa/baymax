@@ -120,27 +120,36 @@ export default function BaymaxHeroBanner({
   ]
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       {isOpen && (
-        <motion.div
-          id="baymax-waving-hero"
-          className="relative w-full select-none overflow-hidden z-25 flex-shrink-0"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20, 30, 48, 0.96) 0%, rgba(36, 50, 70, 0.94) 50%, rgba(20, 30, 48, 0.97) 100%)',
-            backdropFilter: 'blur(24px) saturate(150%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-            borderBottom: '1px solid rgba(214, 32, 39, 0.3)',
-            maxHeight: '55vh',
-          }}
-          /* ── SPRING OPEN ── */
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{
-            height: { type: 'spring', stiffness: 300, damping: 30, mass: 0.8 },
-            opacity: { duration: 0.3 },
-          }}
-        >
+        <>
+          {/* Backdrop Dimmer */}
+          <motion.div
+            key="baymax-banner-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          />
+
+          {/* Floating Hero Banner Panel */}
+          <div className="fixed inset-x-0 top-16 sm:top-[64px] z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
+            <motion.div
+              key="baymax-banner-card"
+              id="baymax-waving-hero"
+              className="relative w-full max-w-6xl select-none rounded-2xl overflow-hidden pointer-events-auto shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(214,32,39,0.35)] border border-[#d62027]/40 max-h-[calc(100vh-5.5rem)] overflow-y-auto"
+              style={{
+                background: 'linear-gradient(180deg, rgba(16, 26, 42, 0.97) 0%, rgba(28, 42, 60, 0.96) 50%, rgba(16, 26, 42, 0.98) 100%)',
+                backdropFilter: 'blur(28px) saturate(160%)',
+                WebkitBackdropFilter: 'blur(28px) saturate(160%)',
+              }}
+              initial={{ opacity: 0, y: -20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+            >
           {/* ── SCAN LINE ── */}
           <ScanLine />
 
@@ -562,7 +571,9 @@ export default function BaymaxHeroBanner({
 
           </div>
         </motion.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </>
+  )}
+</AnimatePresence>
   )
 }
