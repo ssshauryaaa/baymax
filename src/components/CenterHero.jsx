@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 /* ════════════════════════════════════════════════════════════════
-   HIRO & BAYMAX — Beyond the Portal  ·  6-chapter story stage
-   Each chapter has: scene SVG, title, body text, mission card,
-   colour accent, and a zone label.
+   HIRO & BAYMAX — Beyond the Portal · 6-Chapter Story Stage
+   Each chapter features a UNIQUE character scene, telemetry HUD,
+   mission dossier, and audio log.
    ════════════════════════════════════════════════════════════════ */
 
 const CHAPTERS = [
@@ -12,52 +13,33 @@ const CHAPTERS = [
     title: 'The Jump',
     zone: 'Portal Edge',
     accent: '#E5383B',
+    badgeText: 'HIRO HAMADA // QUANTUM LEAP INITIATED',
+    charImage: '/characters/hiro.png',
+    charAlt: 'Hiro Hamada leaping into portal',
+    keyMetric: { label: 'Tadashi Chip', val: '100% Locked', sub: 'Portal Seal: 42s' },
     body: `After the battle with Callaghan, Baymax sacrifices himself to launch Hiro to safety. But Hiro sees Baymax's healthcare chip still blinking in the closing portal — and he knows Baymax is still inside. Against every warning, Hiro turns back and leaps through the shrinking gate.`,
     mission: 'ENTER THE PORTAL — FIND BAYMAX',
-    missionSub: 'Time window: closing fast',
-    tags: ['Hiro', 'Baymax', 'Sacrifice'],
+    missionSub: 'Time window: Gate closing at 12% per min',
+    tags: ['Hiro', 'Tadashi Chip', 'Leap of Faith'],
+    quote: 'Tadashi left this chip to help people. I am not leaving you behind, Baymax!',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
-        {/* Portal glow ring */}
         <defs>
           <radialGradient id="p1g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#E5383B" stopOpacity="0.35" />
-            <stop offset="60%" stopColor="#E5383B" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="#E5383B" stopOpacity="0.45" />
+            <stop offset="60%" stopColor="#E5383B" stopOpacity="0.1" />
             <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-          <radialGradient id="p1inner" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#E5383B" stopOpacity="0.05" />
           </radialGradient>
         </defs>
         <ellipse cx="180" cy="130" rx="120" ry="120" fill="url(#p1g)" />
         <circle cx="180" cy="130" r="90" fill="none" stroke="#E5383B" strokeWidth="2.5" opacity="0.6" />
-        <circle cx="180" cy="130" r="70" fill="url(#p1inner)" stroke="#E5383B" strokeWidth="1.5" opacity="0.9" />
-        <circle cx="180" cy="130" r="48" fill="none" stroke="#fff" strokeWidth="1" opacity="0.25" />
-        {/* Hiro silhouette — leaping forward */}
-        <g transform="translate(148,80)">
-          {/* head */}
-          <circle cx="16" cy="10" r="9" fill="rgba(255,255,255,0.85)" />
-          {/* body */}
-          <path d="M10 19 Q16 35 22 19" fill="rgba(255,255,255,0.75)" />
-          {/* left arm stretched forward */}
-          <line x1="10" y1="24" x2="-4" y2="32" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          {/* right arm back */}
-          <line x1="22" y1="24" x2="34" y2="20" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          {/* legs leap */}
-          <line x1="14" y1="35" x2="6" y2="50" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="18" y1="35" x2="28" y2="46" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-        </g>
-        {/* Chip blinking dot */}
-        <circle cx="186" cy="118" r="5" fill="#E5383B" opacity="0.9" />
-        <circle cx="186" cy="118" r="9" fill="none" stroke="#E5383B" strokeWidth="1.5" opacity="0.5" />
-        {/* Speed lines */}
-        {[0, 1, 2, 3, 4].map(i => (
-          <line key={i} x1={80 + i * 8} y1={100 + i * 6} x2={60 + i * 8} y2={102 + i * 6}
-            stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinecap="round" />
-        ))}
-        {/* Label */}
-        <text x="180" y="248" textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace" letterSpacing="3">PORTAL GATEWAY</text>
+        <circle cx="180" cy="130" r="70" fill="none" stroke="#E5383B" strokeWidth="1.5" opacity="0.9" strokeDasharray="4 2" />
+        <circle cx="180" cy="130" r="48" fill="none" stroke="#fff" strokeWidth="1" opacity="0.4" />
+        <circle cx="186" cy="118" r="6" fill="#10B981" opacity="0.95" />
+        <circle cx="186" cy="118" r="12" fill="none" stroke="#10B981" strokeWidth="1.5" opacity="0.6" className="animate-ping" />
+        <text x="180" y="248" textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          PORTAL GATEWAY // INGRESS
+        </text>
       </svg>
     ),
   },
@@ -65,50 +47,33 @@ const CHAPTERS = [
     num: '02',
     title: 'The Empty Shell',
     zone: 'Drift Field',
-    accent: '#9B8FD4',
-    body: `Inside the portal dimension, gravity has no fixed direction. Debris from countless worlds drifts silently around him. Hiro finds Baymax's white armour floating motionless — empty. The healthcare chip is clutched tightly in his own hand. He has to act fast.`,
+    accent: '#38BDF8',
+    badgeText: 'BAYMAX VINYL HULL // ZERO-G DRIFT',
+    charImage: '/characters/baymax.png',
+    charAlt: 'Baymax dormant vinyl hull in zero gravity',
+    keyMetric: { label: 'Chassis Power', val: '0% Dormant', sub: 'Vinyl Pressure: 1.2 ATM' },
+    body: `Inside the portal dimension, gravity has no fixed direction. Debris from countless worlds drifts silently around him. Hiro finds Baymax's white vinyl armor floating motionless — empty and unpowered. The healthcare chip is clutched tightly in Hiro's fist. He has to reach the chest port.`,
     mission: 'LOCATE THE ARMOUR — PREPARE THE CHIP',
-    missionSub: 'No power signature detected',
+    missionSub: 'Zero life signs · Ocular offline',
     tags: ['Empty Armour', 'Healthcare Chip', 'Zero-G'],
+    quote: 'Zero life signs detected. His empty armor is drifting. I have to reach the chest port before we drift apart.',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
         <defs>
           <radialGradient id="p2g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#9B8FD4" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.25" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>
         <ellipse cx="180" cy="130" rx="130" ry="110" fill="url(#p2g)" />
-        {/* Baymax empty shell — floating, rounded body */}
-        <g transform="translate(115, 55)">
-          {/* head */}
-          <ellipse cx="65" cy="22" rx="22" ry="20" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
-          {/* eyes — dark, off */}
-          <ellipse cx="57" cy="22" rx="5" ry="4" fill="rgba(40,40,60,0.8)" />
-          <ellipse cx="73" cy="22" rx="5" ry="4" fill="rgba(40,40,60,0.8)" />
-          {/* body */}
-          <ellipse cx="65" cy="78" rx="38" ry="42" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" />
-          {/* chest port — empty */}
-          <circle cx="65" cy="68" r="10" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeDasharray="3 2" />
-          {/* arms drifting */}
-          <ellipse cx="18" cy="65" rx="12" ry="28" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" transform="rotate(-20,18,65)" />
-          <ellipse cx="112" cy="60" rx="12" ry="28" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" transform="rotate(15,112,60)" />
-          {/* legs */}
-          <ellipse cx="50" cy="128" rx="11" ry="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-          <ellipse cx="80" cy="128" rx="11" ry="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-        </g>
-        {/* Floating debris */}
-        {[[30, 60, 8], [300, 100, 5], [50, 190, 7], [320, 160, 4], [90, 220, 6], [260, 40, 5]].map(([x, y, r], i) => (
-          <circle key={i} cx={x} cy={y} r={r} fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+        <circle cx="180" cy="120" r="55" fill="none" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.5" />
+        <circle cx="180" cy="120" r="8" fill="none" stroke="#fff" strokeWidth="2" strokeDasharray="2 2" className="animate-spin" />
+        {[[40, 60, 6], [300, 100, 5], [60, 190, 8], [310, 170, 6], [100, 220, 5]].map(([x, y, r], i) => (
+          <circle key={i} cx={x} cy={y} r={r} fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
         ))}
-        {/* Chip in Hiro's hand (bottom corner) */}
-        <g transform="translate(25,195)">
-          <rect x="0" y="0" width="22" height="16" rx="2" fill="rgba(229,56,59,0.7)" stroke="#E5383B" strokeWidth="1" />
-          <line x1="4" y1="0" x2="4" y2="-5" stroke="#E5383B" strokeWidth="1.5" />
-          <line x1="11" y1="0" x2="11" y2="-5" stroke="#E5383B" strokeWidth="1.5" />
-          <line x1="18" y1="0" x2="18" y2="-5" stroke="#E5383B" strokeWidth="1.5" />
-        </g>
-        <text x="180" y="248" textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace" letterSpacing="3">DRIFT FIELD — SECTOR 0</text>
+        <text x="180" y="248" textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          DRIFT FIELD // SECTOR 1
+        </text>
       </svg>
     ),
   },
@@ -116,296 +81,187 @@ const CHAPTERS = [
     num: '03',
     title: 'Restoration',
     zone: 'Quiet Ruins',
-    accent: '#2DD4BF',
-    body: `Hiro finds a moment of stillness among the ruins of the dimension — fractured platforms suspended in the void. He steadies himself, pulls out the healthcare chip, and slots it into the port in Baymax's chest. A pause. Then — systems online.`,
-    mission: 'INSERT CHIP — RESTORE BAYMAX',
-    missionSub: '"Hello. I am Baymax."',
-    tags: ['Chip Install', 'Baymax Online', 'Reunion'],
+    accent: '#10B981',
+    badgeText: 'TADASHI CHIP INSERTED // ONLINE',
+    charImage: '/baymax-hero-banner.png',
+    charAlt: 'Baymax waking up and greeting Hiro',
+    keyMetric: { label: 'Empathy Core', val: '100% Active', sub: 'Directives Restored' },
+    body: `Hiro finds a moment of stillness among the ruins of the dimension — fractured platforms suspended in the void. He steadies himself, pulls out Tadashi's healthcare chip, and slots it firmly into the port in Baymax's chest. A pause. Soft chime. Then — systems online.`,
+    mission: 'CHIP INSERTION COMPLETE — REBOOT SUCCESSFUL',
+    missionSub: 'Empathy matrix synchronized',
+    tags: ['Restoration', 'Tadashi Hamada', 'Awakening'],
+    quote: 'Hello. I am Baymax. Your personal healthcare companion. Hiro... you came back for me.',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
         <defs>
           <radialGradient id="p3g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#2DD4BF" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="#10B981" stopOpacity="0.4" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>
-        <ellipse cx="180" cy="130" rx="130" ry="110" fill="url(#p3g)" />
-        {/* Baymax — lit up, online */}
-        <g transform="translate(108, 50)">
-          {/* head glow */}
-          <ellipse cx="65" cy="22" rx="26" ry="24" fill="rgba(45,212,191,0.12)" stroke="#2DD4BF" strokeWidth="1.5" />
-          <ellipse cx="65" cy="22" rx="22" ry="20" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" />
-          {/* eyes — lit */}
-          <ellipse cx="57" cy="22" rx="5" ry="4" fill="#1a1a2e" />
-          <ellipse cx="73" cy="22" rx="5" ry="4" fill="#1a1a2e" />
-          {/* smile line */}
-          <path d="M59 28 Q65 32 71 28" fill="none" stroke="#2DD4BF" strokeWidth="1.8" strokeLinecap="round" />
-          {/* body */}
-          <ellipse cx="65" cy="78" rx="38" ry="42" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" />
-          {/* chest chip — installed, glowing */}
-          <circle cx="65" cy="68" r="10" fill="rgba(45,212,191,0.3)" stroke="#2DD4BF" strokeWidth="2" />
-          <circle cx="65" cy="68" r="5" fill="#2DD4BF" opacity="0.9" />
-          {/* arms spread welcome */}
-          <ellipse cx="15" cy="60" rx="11" ry="28" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" transform="rotate(-30,15,60)" />
-          <ellipse cx="115" cy="60" rx="11" ry="28" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" transform="rotate(30,115,60)" />
-          {/* legs */}
-          <ellipse cx="50" cy="128" rx="11" ry="20" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-          <ellipse cx="80" cy="128" rx="11" ry="20" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-        </g>
-        {/* Hiro — beside Baymax, arm raised */}
-        <g transform="translate(245, 100)">
-          <circle cx="14" cy="10" r="8" fill="rgba(255,255,255,0.8)" />
-          <path d="M9 18 Q14 30 19 18" fill="rgba(255,255,255,0.7)" />
-          <line x1="9" y1="22" x2="0" y2="15" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="19" y1="22" x2="26" y2="28" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="12" y1="30" x2="10" y2="45" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="16" y1="30" x2="18" y2="45" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-        </g>
-        {/* Floating ruin platforms */}
-        {[[25, 160, 50, 6], [280, 140, 45, 6], [60, 210, 60, 6]].map(([x, y, w, h], i) => (
-          <rect key={i} x={x} y={y} width={w} height={h} rx="2" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-        ))}
-        <text x="180" y="248" textAnchor="middle" fill="rgba(45,212,191,0.5)" fontSize="9" fontFamily="monospace" letterSpacing="3">SYSTEMS RESTORED</text>
+        <ellipse cx="180" cy="130" rx="120" ry="100" fill="url(#p3g)" />
+        <circle cx="180" cy="120" r="30" fill="none" stroke="#10B981" strokeWidth="2" opacity="0.8" />
+        <circle cx="180" cy="120" r="60" fill="none" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.5" className="animate-pulse" />
+        <text x="180" y="248" textAnchor="middle" fill="#10B981" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          RESTORATION SITE // SFIT PROTOCOL
+        </text>
       </svg>
     ),
   },
   {
     num: '04',
-    title: 'The Strange World',
-    zone: 'Inverted Canyon',
+    title: 'Inverted Canyon',
+    zone: 'The Rift',
     accent: '#FBBF24',
-    body: `The dimension defies all physics. Canyons hang upside down. Gravity shifts without warning. Strange energy pillars pulse through the air. Baymax's sensors can't map anything — nothing in his database matches this place. Every step forward is unknown.`,
-    mission: 'NAVIGATE THE INVERTED CANYON',
-    missionSub: 'Threat level: HIGH — stay close',
-    tags: ['Zero-Physics', 'Hazards', 'Unknown Zone'],
+    badgeText: 'GRAVITATIONAL INVERSION // EM BARRIER',
+    charImage: '/hiro-baymax-armor.png',
+    charAlt: 'Hiro tethered to Baymax in inverted gravity',
+    keyMetric: { label: 'Graviton Shear', val: '-2.4 G', sub: 'Tether Load: 340kg' },
+    body: `Gravity in Sector 3 flips upside down. Shattered megaliths and Krei Tech test debris float in reverse toward phantom mass centers. Hiro tethers his suit clamp securely to Baymax's backplate as Baymax uses his heavy magnetic boots to anchor onto metallic strata.`,
+    mission: 'NAVIGATE INVERTED STRATA — HOLD FORMATION',
+    missionSub: 'High graviton turbulence',
+    tags: ['Inverted Gravity', 'Tether Link', 'Megaliths'],
+    quote: 'Warning: Gravitational physics in this canyon are inverted. Hiro, please hold tightly onto my back chassis.',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
         <defs>
-          <radialGradient id="p4g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FBBF24" stopOpacity="0.2" />
+          <linearGradient id="p4g" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#FBBF24" stopOpacity="0.3" />
             <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
+          </linearGradient>
         </defs>
-        <ellipse cx="180" cy="130" rx="160" ry="120" fill="url(#p4g)" />
-        {/* Inverted cliff shapes from above */}
-        <path d="M0 0 Q60 40 80 0 L80 70 Q60 50 0 80 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-        <path d="M280 0 Q310 50 360 20 L360 90 Q310 60 280 80 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-        {/* Energy pillars */}
-        {[80, 150, 240, 295].map((x, i) => (
-          <g key={i}>
-            <rect x={x} y={60} width={8} height={150} fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.3)" strokeWidth="1" />
-            <ellipse cx={x + 4} cy={60} rx={12} ry={6} fill="rgba(251,191,36,0.2)" />
-          </g>
+        <rect x="0" y="0" width="360" height="260" fill="url(#p4g)" />
+        {[60, 120, 180, 240, 300].map((x, i) => (
+          <line key={i} x1={x} y1="200" x2={x} y2="60" stroke="#FBBF24" strokeWidth="1" strokeDasharray="6 4" opacity="0.35" />
         ))}
-        {/* Hiro + Baymax walking across a floating path */}
-        <rect x="100" y="155" width="160" height="8" rx="3" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
-        {/* Baymax */}
-        <g transform="translate(128, 110)">
-          <ellipse cx="18" cy="14" rx="14" ry="12" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
-          <ellipse cx="13" cy="14" rx="3" ry="3" fill="#1a1a2e" />
-          <ellipse cx="23" cy="14" rx="3" ry="3" fill="#1a1a2e" />
-          <ellipse cx="18" cy="36" rx="22" ry="26" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
-          <ellipse cx="-4" cy="32" rx="7" ry="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-          <ellipse cx="40" cy="32" rx="7" ry="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-        </g>
-        {/* Hiro */}
-        <g transform="translate(196, 122)">
-          <circle cx="10" cy="8" r="7" fill="rgba(255,255,255,0.8)" />
-          <path d="M6 15 Q10 25 14 15" fill="rgba(255,255,255,0.7)" />
-          <line x1="6" y1="18" x2="0" y2="24" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="14" y1="18" x2="20" y2="22" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="8" y1="25" x2="6" y2="36" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          <line x1="12" y1="25" x2="14" y2="36" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-        </g>
-        {/* Inverted rocks above */}
-        {[[50, 30, 25, 16], [200, 20, 30, 18], [300, 35, 22, 14]].map(([x, y, w, h], i) => (
-          <ellipse key={i} cx={x} cy={y} rx={w} ry={h} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-        ))}
-        <text x="180" y="248" textAnchor="middle" fill="rgba(251,191,36,0.5)" fontSize="9" fontFamily="monospace" letterSpacing="3">GRAVITY UNSTABLE</text>
+        <text x="180" y="248" textAnchor="middle" fill="#FBBF24" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          INVERTED CANYON // SECTOR 3
+        </text>
       </svg>
     ),
   },
   {
     num: '05',
-    title: 'Working Together',
-    zone: 'Glitch Bridge',
-    accent: '#B8A4FF',
-    body: `Hiro uses his tech genius to analyse the portal dimension's patterns — but the dangers are physical. Baymax provides the shield. Together they build a path across the Glitch Bridge: Hiro designs, Baymax protects. Neither could do it without the other.`,
-    mission: 'BUILD THE BRIDGE — CROSS TOGETHER',
-    missionSub: 'Combine tech + care protocols',
-    tags: ['Teamwork', 'Engineering', 'Protection'],
+    title: 'The Glitch Bridge',
+    zone: 'Glitch Spire',
+    accent: '#F87171',
+    badgeText: 'MAGNETIC WINCH ARMED // TEAM COMMS',
+    charImage: '/characters/hiro.png',
+    secondaryCharImage: '/characters/gogo.png',
+    charAlt: 'Hiro assembling magnetic winch with team comms',
+    keyMetric: { label: 'Winch Tensile', val: '1,200 kg', sub: 'Team Comms: 432.18 GHz' },
+    body: `Spacetime fractures threaten to shear the pathway ahead. From scavenged Krei Tech pod struts, Hiro fabricates a magnetic grapple winch to replace Baymax's sacrificed rocket fist. Suddenly, a faint radio transmission breaks through: Go Go and Wasabi holding the portal rings open outside!`,
+    mission: 'DEPLOY MAGNETIC WINCH — LOCK SFIT FREQUENCY',
+    missionSub: 'Team holding the gate open',
+    tags: ['Magnetic Winch', 'Team Transmission', 'Engineering'],
+    quote: 'Glitch storm frequency locked. Go Go, Wasabi, we read you! Hiro calculates the trajectory, I provide the shield.',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
         <defs>
-          <radialGradient id="p5g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#B8A4FF" stopOpacity="0.22" />
+          <linearGradient id="p5g" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="50%" stopColor="#F87171" stopOpacity="0.4" />
             <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-          <linearGradient id="bridgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#B8A4FF" stopOpacity="0.6" />
-            <stop offset="50%" stopColor="#2DD4BF" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#B8A4FF" stopOpacity="0.6" />
           </linearGradient>
         </defs>
-        <ellipse cx="180" cy="130" rx="150" ry="120" fill="url(#p5g)" />
-        {/* Bridge structure being built */}
-        <rect x="30" y="148" width="300" height="10" rx="3" fill="url(#bridgeGrad)" stroke="rgba(184,164,255,0.5)" strokeWidth="1" />
-        {/* Bridge supports */}
-        {[60, 120, 180, 240, 300].map((x, i) => (
-          <line key={i} x1={x} y1={158} x2={x} y2={200} stroke="rgba(184,164,255,0.25)" strokeWidth="2" />
-        ))}
-        {/* Glitch patches — broken segments */}
-        <rect x="130" y="144" width="40" height="18" rx="2" fill="rgba(0,0,0,0.35)" stroke="rgba(184,164,255,0.2)" strokeWidth="1" strokeDasharray="4 2" />
-        <rect x="220" y="144" width="30" height="18" rx="2" fill="rgba(0,0,0,0.35)" stroke="rgba(184,164,255,0.2)" strokeWidth="1" strokeDasharray="4 2" />
-        {/* Baymax — shielding */}
-        <g transform="translate(80, 85)">
-          <ellipse cx="20" cy="16" rx="16" ry="14" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" />
-          <ellipse cx="14" cy="16" rx="4" ry="3" fill="#1a1a2e" />
-          <ellipse cx="26" cy="16" rx="4" ry="3" fill="#1a1a2e" />
-          <ellipse cx="20" cy="42" rx="26" ry="30" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
-          {/* shield arm outstretched */}
-          <ellipse cx="-12" cy="35" rx="8" ry="20" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" transform="rotate(-40,-12,35)" />
-          {/* shield glow */}
-          <ellipse cx="-22" cy="42" rx="16" ry="24" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" strokeWidth="1.5" strokeDasharray="3 2" />
-          <ellipse cx="48" cy="35" rx="8" ry="20" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" transform="rotate(20,48,35)" />
-        </g>
-        {/* Hiro — kneeling, building */}
-        <g transform="translate(225, 108)">
-          <circle cx="10" cy="8" r="8" fill="rgba(255,255,255,0.8)" />
-          <path d="M6 16 Q10 22 14 16" fill="rgba(255,255,255,0.7)" />
-          {/* arm reaching down */}
-          <line x1="6" y1="20" x2="-2" y2="30" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="14" y1="20" x2="22" y2="16" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" />
-          {/* kneeling legs */}
-          <line x1="8" y1="22" x2="4" y2="35" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="12" y1="22" x2="18" y2="34" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" />
-          {/* tool spark */}
-          <circle cx="-2" cy="30" r="4" fill="rgba(251,191,36,0.6)" />
-        </g>
-        <text x="180" y="248" textAnchor="middle" fill="rgba(184,164,255,0.5)" fontSize="9" fontFamily="monospace" letterSpacing="3">GLITCH BRIDGE — ACTIVE</text>
+        <rect x="0" y="100" width="360" height="40" fill="url(#p5g)" />
+        <line x1="20" y1="120" x2="340" y2="120" stroke="#F87171" strokeWidth="2.5" strokeDasharray="6 3" />
+        <text x="180" y="248" textAnchor="middle" fill="#F87171" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          GLITCH BRIDGE // SECTOR 4
+        </text>
       </svg>
     ),
   },
   {
     num: '06',
-    title: 'The Way Home',
-    zone: 'Closing Gate',
-    accent: '#2DD4BF',
-    body: `The exit portal is found — but it is closing fast. Baymax's battery is critically low. With one last burst of power, Baymax launches Hiro through the gate. Then, in the final second, Hiro reaches back through the closing gate and pulls Baymax's armour with him. This time, nobody gets left behind.`,
-    mission: 'ESCAPE BEFORE THE GATE SEALS',
-    missionSub: 'Battery critical — make it count',
-    tags: ['Escape', 'Sacrifice', 'Home'],
+    title: 'The Escape Jump',
+    zone: 'Exit Portal',
+    accent: '#D62027',
+    badgeText: 'DUAL-THRUSTER IGNITION // TERMINAL LEAP',
+    charImage: '/hiro-baymax-armor.png',
+    charAlt: 'Hiro and Baymax at maximum thruster burn',
+    keyMetric: { label: 'Delta-V Velocity', val: '82 m/s', sub: 'Burn Window: 4.8s' },
+    body: `The exit portal event horizon is collapsing down to 4.2 meters. Hiro mounts Baymax's armored back and locks their trajectory. Hydrazine thrusters ignite at 100% capacity in a thunderous synchronized burn. Together, as partners and brothers, they burst through the singularity back home.`,
+    mission: 'MAXIMUM THRUST JUMP — EMERGE TOGETHER',
+    missionSub: 'Event horizon closing · Jump now',
+    tags: ['Final Escape', 'Max Thrust', 'Brothers'],
+    quote: 'Event horizon closing at maximum rate. Prepare for emergency thruster ignition. Hiro, we exit together!',
     scene: (
       <svg viewBox="0 0 360 260" className="w-full h-full" aria-hidden="true">
         <defs>
           <radialGradient id="p6g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#2DD4BF" stopOpacity="0.3" />
-            <stop offset="60%" stopColor="#E5383B" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-          <radialGradient id="gateGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.3" />
-            <stop offset="40%" stopColor="#2DD4BF" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#D62027" stopOpacity="0.6" />
+            <stop offset="60%" stopColor="#D62027" stopOpacity="0.15" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>
-        <ellipse cx="280" cy="130" rx="80" ry="100" fill="url(#p6g)" />
-        {/* Closing gate — half-shut ellipse */}
-        <ellipse cx="280" cy="130" rx="55" ry="90" fill="url(#gateGlow)" stroke="#2DD4BF" strokeWidth="2.5" opacity="0.8" />
-        <ellipse cx="280" cy="130" rx="35" ry="70" fill="rgba(255,255,255,0.12)" stroke="#fff" strokeWidth="1" opacity="0.6" />
-        {/* Closing panels */}
-        <path d="M280 40 Q240 80 240 130 Q240 180 280 220 Q260 180 262 130 Q262 80 280 40 Z" fill="rgba(45,212,191,0.15)" />
-        {/* Hiro going through — outstretched arm back */}
-        <g transform="translate(235, 88)">
-          <circle cx="12" cy="8" r="8" fill="rgba(255,255,255,0.85)" />
-          <path d="M8 16 Q12 24 16 16" fill="rgba(255,255,255,0.75)" />
-          {/* arm reaching back */}
-          <line x1="8" y1="20" x2="-10" y2="18" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          {/* other arm forward */}
-          <line x1="16" y1="20" x2="28" y2="24" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="10" y1="24" x2="6" y2="40" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="14" y1="24" x2="18" y2="40" stroke="rgba(255,255,255,0.75)" strokeWidth="2.5" strokeLinecap="round" />
-        </g>
-        {/* Baymax being pulled — arm extended */}
-        <g transform="translate(140, 90)">
-          <ellipse cx="20" cy="16" rx="16" ry="14" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
-          <ellipse cx="14" cy="16" rx="4" ry="3" fill="#1a1a2e" />
-          <ellipse cx="26" cy="16" rx="4" ry="3" fill="#1a1a2e" />
-          {/* smile — happy */}
-          <path d="M14 22 Q20 26 26 22" fill="none" stroke="#2DD4BF" strokeWidth="1.8" strokeLinecap="round" />
-          <ellipse cx="20" cy="42" rx="26" ry="30" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-          {/* arm reaching forward to Hiro */}
-          <ellipse cx="52" cy="30" rx="8" ry="18" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" transform="rotate(30,52,30)" />
-          <ellipse cx="-12" cy="30" rx="8" ry="18" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" transform="rotate(-15,-12,30)" />
-          {/* battery low indicator */}
-          <rect x="12" y="56" width="16" height="8" rx="1" fill="none" stroke="rgba(229,56,59,0.7)" strokeWidth="1.2" />
-          <rect x="13" y="57" width="4" height="6" rx="0.5" fill="rgba(229,56,59,0.7)" />
-        </g>
-        {/* Connection line — hand to hand */}
-        <line x1="193" y1="118" x2="225" y2="116" stroke="rgba(45,212,191,0.5)" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" />
-        <text x="180" y="248" textAnchor="middle" fill="rgba(45,212,191,0.5)" fontSize="9" fontFamily="monospace" letterSpacing="3">EXIT PORTAL — CLOSING</text>
+        <ellipse cx="180" cy="130" rx="130" ry="110" fill="url(#p6g)" />
+        <circle cx="180" cy="130" r="80" fill="none" stroke="#D62027" strokeWidth="3" opacity="0.8" />
+        <circle cx="180" cy="130" r="40" fill="none" stroke="#fff" strokeWidth="2" strokeDasharray="4 2" className="animate-spin" />
+        <text x="180" y="248" textAnchor="middle" fill="#D62027" fontSize="9" fontFamily="monospace" letterSpacing="3">
+          EXIT SINGULARITY // SFIT LAB GATE
+        </text>
       </svg>
     ),
   },
 ]
 
-/* ── Threat badge colour ─────────────────────────────────────────── */
-const THREAT = {
-  Low: { bg: 'bg-emerald-500/20', text: 'text-emerald-300', border: 'border-emerald-500/40' },
-  Moderate: { bg: 'bg-amber-500/20', text: 'text-amber-300', border: 'border-amber-500/40' },
-  Elevated: { bg: 'bg-orange-500/20', text: 'text-orange-300', border: 'border-orange-500/40' },
-  High: { bg: 'bg-red-500/20', text: 'text-red-300', border: 'border-red-500/40' },
-}
-
-/* ════════════════════════════════════════════════════════════════ */
 export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
   const idx = Math.min(Math.max(slide, 0), CHAPTERS.length - 1)
   const chapter = CHAPTERS[idx]
-  const [visible, setVisible] = useState(true)
-  const [visualMode, setVisualMode] = useState('character')
 
-  const quotes = [
-    "Tadashi left this chip to help people. I am not leaving you behind, Baymax!",
-    "Zero life signs detected. His empty armor is drifting. I have to reach the chest port.",
-    "Hello. I am Baymax. Your personal healthcare companion. Hiro... you came back for me.",
-    "Warning: Gravitational physics in this canyon are unstable. Hiro, please hold onto my chassis.",
-    "Glitch storm frequency locked. Hiro calculates the trajectory, I provide the shield.",
-    "Event horizon closing at maximum rate. Prepare for emergency thruster ignition. We exit together!"
-  ]
-
+  // Play voice log using Web Speech API + Web Audio chime
   const speakQuote = () => {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      if (AudioContext) {
+        const ctx = new AudioContext()
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain); gain.connect(ctx.destination)
+        osc.frequency.setValueAtTime(580, ctx.currentTime)
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15)
+        gain.gain.setValueAtTime(0.08, ctx.currentTime)
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25)
+        osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25)
+      }
+    } catch { /* noop */ }
+
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel()
-      const text = quotes[idx] || chapter.body
+      const text = chapter.quote || chapter.body
       const utter = new SpeechSynthesisUtterance(text)
-      utter.rate = 0.95
-      utter.pitch = 1.05
+      utter.rate = 0.96
+      utter.pitch = 1.02
       window.speechSynthesis.speak(utter)
     }
   }
 
-  /* Fade transition on chapter change */
-  useEffect(() => {
-    setVisible(false)
-    const t = setTimeout(() => setVisible(true), 120)
-    return () => clearTimeout(t)
-  }, [idx])
-
-  const t = THREAT[chapter.tags[0]] || THREAT.Low
-
   return (
-    <div id="center-hero" className="flex-1 flex flex-col relative overflow-hidden select-none">
+    <div id="center-hero" className="flex-1 flex flex-col relative overflow-hidden select-none text-white">
 
-      {/* ── NAV ARROWS ─────────────────────────────────────────── */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-4 z-30 pointer-events-none">
+      {/* ── SOFT AMBIENT AURA ────────────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div
+          className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full blur-[130px] opacity-25 transition-all duration-700"
+          style={{ background: chapter.accent }}
+        />
+        <div
+          className="absolute -bottom-32 -right-32 w-[520px] h-[520px] rounded-full blur-[130px] opacity-20"
+          style={{ background: '#ffffff' }}
+        />
+      </div>
+
+      {/* ── FLOATING PREV / NEXT NAV ARROWS ──────────────────── */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-3 sm:px-5 z-30 pointer-events-none">
         <button
           id="nav-prev"
           onClick={goPrev}
           disabled={idx === 0}
           aria-label="Previous chapter"
-          className="pointer-events-auto w-10 h-10 rounded-full border border-white/30 bg-black/25 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 hover:border-white/60 transition-all duration-200 shadow-md disabled:opacity-20 disabled:cursor-not-allowed group"
+          className="pointer-events-auto w-11 h-11 rounded-full border border-white/30 bg-white/15 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 hover:border-white/60 transition-all duration-200 shadow-lg disabled:opacity-20 disabled:cursor-not-allowed group cursor-pointer"
         >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:-translate-x-0.5 transition-transform">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="group-hover:-translate-x-0.5 transition-transform">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
           </svg>
         </button>
@@ -414,71 +270,39 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
           onClick={goNext}
           disabled={idx === totalChapters - 1}
           aria-label="Next chapter"
-          className="pointer-events-auto w-10 h-10 rounded-full border border-white/30 bg-black/25 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white hover:bg-black/50 hover:border-white/60 transition-all duration-200 shadow-md disabled:opacity-20 disabled:cursor-not-allowed group"
+          className="pointer-events-auto w-11 h-11 rounded-full border border-white/30 bg-white/15 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 hover:border-white/60 transition-all duration-200 shadow-lg disabled:opacity-20 disabled:cursor-not-allowed group cursor-pointer"
         >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
           </svg>
         </button>
       </div>
 
-      {/* ── MODE SWITCHER & AUDIO BUTTON ─────────────────────── */}
+      {/* ── TOP CONTROLS (VOICE LOG) ─────────────────────────── */}
       <div className="absolute top-3 left-4 z-20 flex items-center gap-2">
         <button
-          onClick={() => setVisualMode(v => v === 'character' ? 'scene' : 'character')}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/40 hover:bg-black/60 border border-white/20 text-white font-cond font-bold text-[9.5px] uppercase tracking-wider transition-all"
-        >
-          {visualMode === 'character' ? (
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="5" y="6" width="14" height="12" rx="2" />
-              <line x1="9" y1="1" x2="9" y2="5" />
-              <line x1="15" y1="1" x2="15" y2="5" />
-              <circle cx="9" cy="11" r="1" fill="currentColor" />
-              <circle cx="15" cy="11" r="1" fill="currentColor" />
-            </svg>
-          )}
-          <span>{visualMode === 'character' ? 'View Scene Art' : 'View Hiro & Baymax'}</span>
-        </button>
-
-        <button
           onClick={speakQuote}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-hero/25 hover:bg-red-hero/40 border border-red-hero/50 text-white font-cond font-bold text-[9.5px] uppercase tracking-wider transition-all"
-          title="Play Voice Audio"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#d62027] hover:bg-[#ef4444] border border-red-400/50 text-white font-mono text-[10px] uppercase font-bold tracking-wider transition-all cursor-pointer shadow-[0_2px_12px_rgba(214,32,39,0.4)]"
+          title="Play Voice Audio Memo"
         >
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
           </svg>
           <span>Voice Log</span>
         </button>
       </div>
 
-      {/* ── MAIN STAGE ─────────────────────────────────────────── */}
-      <div
-        className="flex-1 flex flex-col lg:flex-row items-stretch gap-0 overflow-hidden relative"
-        style={{
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.18s ease',
-        }}
-      >
-        {/* Visual stage — left/center */}
-        <div className="relative flex-1 flex items-center justify-center overflow-hidden min-h-[220px]">
-          {/* Subtle accent glow */}
-          <div
-            className="absolute inset-0 opacity-25 pointer-events-none"
-            style={{ background: `radial-gradient(ellipse at 50% 50%, ${chapter.accent} 0%, transparent 70%)` }}
-          />
+      {/* ── MAIN STAGE ───────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col lg:flex-row items-stretch gap-0 overflow-hidden relative z-10">
 
-          {/* Chapter number watermark */}
+        {/* ════ LEFT / CENTER VISUAL STAGE (CHARACTER & SCENE) ════ */}
+        <div className="relative flex-1 flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[360px] p-4 sm:p-6">
+
+          {/* Watermark Big Chapter Number */}
           <span
-            className="absolute font-oswald font-black select-none pointer-events-none text-white/[0.04]"
+            className="absolute font-oswald font-black select-none pointer-events-none text-white/[0.06]"
             style={{
-              fontSize: 'clamp(90px, 20vw, 200px)',
+              fontSize: 'clamp(120px, 24vw, 260px)',
               lineHeight: 1,
               top: '50%',
               left: '50%',
@@ -490,118 +314,243 @@ export default function CenterHero({ slide, goNext, goPrev, totalChapters }) {
             {chapter.num}
           </span>
 
-          {/* Character Render Mode vs Scene Mode */}
-          {visualMode === 'character' ? (
-            <div className="relative z-10 w-full max-w-[420px] px-4 flex flex-col items-center justify-center">
-              <div className="relative max-h-[50vh] sm:max-h-[55vh] flex items-center justify-center group cursor-pointer" onClick={speakQuote}>
-                <img
-                  src="/hiro-baymax-armor.png"
-                  alt="Hiro and Baymax in armor"
-                  className="max-h-[48vh] w-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.45)] group-hover:scale-[1.02] transition-transform duration-300"
-                />
-                {/* Interactive Pulse Radar over Baymax armor */}
+          {/* Atmospheric Chapter Concentric Aura */}
+          <div
+            className="absolute w-80 h-80 sm:w-96 sm:h-96 rounded-full border border-white/10 pointer-events-none animate-spin-slow opacity-40"
+            style={{ animationDuration: '45s' }}
+          />
+
+          {/* Chapter Character Stage */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`char-${chapter.num}`}
+              initial={{ opacity: 0, scale: 0.94, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: -10 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+              className="relative z-10 w-full max-w-[480px] flex flex-col items-center justify-center"
+            >
+              {/* Character Main Visual Container */}
+              <div
+                className="relative max-h-[48vh] sm:max-h-[54vh] flex items-center justify-center group cursor-pointer"
+                onClick={speakQuote}
+              >
+                {/* Subtle Glow Behind Character */}
                 <div
-                  className="absolute top-[28%] right-[22%] w-12 h-12 rounded-full border border-red-hero/60 animate-ping pointer-events-none"
+                  className="absolute inset-0 rounded-full blur-3xl opacity-35 pointer-events-none"
+                  style={{ background: chapter.accent }}
                 />
-                <div className="absolute bottom-2 bg-black/60 backdrop-blur-sm border border-white/20 px-3 py-1 rounded text-white text-[10px] font-cond font-bold uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-hero animate-pulse" />
-                  <span>Armor Assembly: Chapter {chapter.num}</span>
-                </div>
+
+                {/* Character Image */}
+                <motion.img
+                  src={chapter.charImage}
+                  alt={chapter.charAlt}
+                  animate={
+                    idx === 1
+                      ? { y: [-8, 8, -8], rotate: [-2, 2, -2] }
+                      : { y: [0, -4, 0] }
+                  }
+                  transition={{
+                    duration: idx === 1 ? 5 : 3.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  className="max-h-[44vh] sm:max-h-[50vh] w-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] group-hover:scale-[1.02] transition-transform duration-300"
+                />
+
+                {/* Secondary Team Character Hologram if present (e.g. Chapter 5 Comms) */}
+                {chapter.secondaryCharImage && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl border-2 border-red-400 bg-black/60 backdrop-blur-md p-1 shadow-lg flex flex-col items-center justify-center overflow-hidden"
+                  >
+                    <img src={chapter.secondaryCharImage} alt="Team Comms" className="w-full h-full object-contain" />
+                    <div className="absolute bottom-0 inset-x-0 bg-red-600/90 text-center py-0.5">
+                      <span className="font-mono text-[7.5px] font-bold text-white uppercase">COMMS: GO GO</span>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Interactive Dynamic Overlays by Chapter */}
+                {/* Ch 1: Blinking Chip in hand */}
+                {idx === 0 && (
+                  <div className="absolute top-[32%] right-[24%] pointer-events-none flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-emerald-400 animate-ping absolute opacity-75" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-400 relative shadow-[0_0_12px_#10B981]" />
+                  </div>
+                )}
+
+                {/* Ch 2: Empty Chest Port Ring */}
+                {idx === 1 && (
+                  <div className="absolute top-[42%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2">
+                    <span className="w-8 h-8 rounded-full border-2 border-dashed border-sky-400 animate-spin absolute" />
+                    <span className="w-4 h-4 rounded-full border border-sky-300 opacity-60" />
+                  </div>
+                )}
+
+                {/* Ch 3: Glowing Chest Healthcare Beacon */}
+                {idx === 2 && (
+                  <div className="absolute top-[48%] left-[48%] pointer-events-none flex items-center justify-center -translate-x-1/2">
+                    <span className="w-12 h-12 rounded-full bg-emerald-400/30 animate-ping absolute" />
+                    <span className="w-5 h-5 rounded-full bg-emerald-400 relative shadow-[0_0_18px_#10B981]" />
+                  </div>
+                )}
+
+                {/* Ch 6: Dual Thruster Fire Exhaust */}
+                {idx === 5 && (
+                  <div className="absolute bottom-6 inset-x-0 flex justify-center gap-10 pointer-events-none">
+                    <div className="w-3 h-12 bg-gradient-to-t from-transparent via-amber-400 to-red-500 rounded-full blur-[2px] animate-pulse" />
+                    <div className="w-3 h-12 bg-gradient-to-t from-transparent via-amber-400 to-red-500 rounded-full blur-[2px] animate-pulse" />
+                  </div>
+                )}
               </div>
-            </div>
-          ) : (
-            <div className="relative z-10 w-full max-w-[400px] px-4" style={{ height: 'min(300px, 45vh)' }}>
-              {chapter.scene}
-            </div>
-          )}
+
+              {/* Bottom Telemetry Pill Overlay */}
+              <div className="mt-3 flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-white/20 bg-white/12 backdrop-blur-md shadow-md text-white text-xs font-mono">
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: chapter.accent }} />
+                <span className="font-bold">{chapter.badgeText}</span>
+                <span className="text-white/40">•</span>
+                <span className="text-[#fca5a5]">{chapter.keyMetric.label}: {chapter.keyMetric.val}</span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
         </div>
 
-        {/* Story text panel — right side */}
+        {/* ════ RIGHT SIDE: FROSTED STORY DOSSIER & MISSION CARD ════ */}
         <div
-          className="flex flex-col justify-between px-6 py-6 lg:w-[350px] xl:w-[400px] flex-shrink-0 border-t lg:border-t-0 lg:border-l border-white/15"
-          style={{ background: 'rgba(18, 30, 44, 0.72)', backdropFilter: 'blur(12px)' }}
+          className="flex flex-col justify-between px-6 py-6 lg:w-[380px] xl:w-[420px] flex-shrink-0 border-t lg:border-t-0 border-white/20 shadow-2xl relative z-20"
+          style={{
+            background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%)',
+            backdropFilter: 'blur(24px) saturate(160%)',
+            borderLeft: '1px solid rgba(255, 255, 255, 0.22)',
+          }}
         >
-          {/* Top meta */}
+          {/* Top Meta Section */}
           <div className="flex flex-col gap-4">
-            {/* Zone + chapter counter */}
+            
+            {/* Zone Tag & Chapter Index */}
             <div className="flex items-center justify-between">
               <span
-                className="font-cond text-[9.5px] font-bold uppercase tracking-[0.3em] px-2.5 py-1 border rounded-[2px]"
-                style={{ color: chapter.accent, borderColor: `${chapter.accent}55`, background: `${chapter.accent}15` }}
+                className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] px-3 py-1 border rounded-lg shadow-sm"
+                style={{
+                  color: chapter.accent,
+                  borderColor: `${chapter.accent}60`,
+                  background: `${chapter.accent}18`,
+                }}
               >
                 {chapter.zone}
               </span>
-              <span className="font-oswald text-xs text-white/50 tracking-wider tabular-nums font-bold">
-                {String(idx + 1).padStart(2, '0')} / {String(totalChapters).padStart(2, '0')}
+              <span className="font-oswald text-xs text-white/70 tracking-wider tabular-nums font-bold">
+                CHAPTER {chapter.num} / 0{totalChapters}
               </span>
             </div>
 
-            {/* Title */}
+            {/* Chapter Header Title */}
             <div>
-              <p className="font-cond text-[9.5px] font-bold uppercase tracking-[0.28em] text-red-hero mb-1">
-                Chapter {chapter.num} · Beyond The Portal
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#f87171] mb-1">
+                Beyond The Portal · Saga Phase
               </p>
-              <h2
-                className="font-oswald font-black uppercase leading-[0.95] tracking-tight"
-                style={{ fontSize: 'clamp(1.75rem, 3.8vw, 2.5rem)', color: '#fff' }}
-              >
+              <h2 className="font-oswald font-black uppercase leading-[0.96] tracking-tight text-white text-3xl sm:text-4xl">
                 {chapter.title}
               </h2>
             </div>
 
-            {/* Body */}
-            <p className="font-sans text-xs sm:text-sm leading-relaxed text-white/85 tracking-normal">
+            {/* Narrative Story Body */}
+            <p className="font-sans text-xs sm:text-sm leading-relaxed text-white/90 font-normal">
               {chapter.body}
             </p>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1.5">
-              {chapter.tags.map(tag => (
+            {/* Voice Quote Bubble */}
+            <div
+              className="p-3.5 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md space-y-1 shadow-sm cursor-pointer hover:bg-white/15 transition-all"
+              onClick={speakQuote}
+              title="Click to replay audio log"
+            >
+              <div className="flex items-center justify-between text-[9px] font-mono text-[#fca5a5]">
+                <span className="font-bold uppercase tracking-wider">Audio Transcription</span>
+                <span>▶ CLICK TO LISTEN</span>
+              </div>
+              <p className="text-xs text-white/90 italic font-sans leading-snug border-l-2 border-[#d62027] pl-2.5">
+                "{chapter.quote}"
+              </p>
+            </div>
+
+            {/* Tag Pills */}
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {chapter.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="font-cond text-[8.5px] font-bold uppercase tracking-[0.18em] px-2 py-0.5 rounded-[2px] border border-white/20 text-white/70 bg-black/20"
+                  className="font-mono text-[9px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg border border-white/20 text-white/80 bg-white/10 shadow-sm"
                 >
                   {tag}
                 </span>
               ))}
             </div>
+
           </div>
 
-          {/* Mission card */}
+          {/* Mission Objective Card */}
           <div
-            className="mt-4 border rounded-[3px] p-3.5 flex flex-col gap-1 shadow-sm"
-            style={{ borderColor: `${chapter.accent}70`, background: `${chapter.accent}15` }}
+            className="mt-5 border rounded-2xl p-4 flex flex-col gap-1.5 shadow-lg backdrop-blur-md"
+            style={{
+              borderColor: `${chapter.accent}60`,
+              background: `${chapter.accent}15`,
+            }}
           >
             <div className="flex items-center justify-between">
-              <p className="font-cond text-[8px] font-bold uppercase tracking-[0.28em] text-white/60">
-                Mission Objective
-              </p>
-              <span className="w-2 h-2 rounded-full" style={{ background: chapter.accent }} />
+              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-white/70">
+                Mission Directive
+              </span>
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: chapter.accent }} />
             </div>
-            <p
-              className="font-oswald font-bold text-sm uppercase tracking-[0.1em]"
-              style={{ color: chapter.accent }}
-            >
+            <p className="font-oswald font-black text-base uppercase tracking-wide text-white leading-tight">
               {chapter.mission}
             </p>
-            <p className="font-cond text-[9.5px] text-white/75 tracking-wider">
+            <p className="font-mono text-[10px] text-white/80">
               {chapter.missionSub}
             </p>
           </div>
+
         </div>
+
       </div>
 
-      {/* ── CHAPTER PROGRESS BAR (bottom) ────────────────────── */}
-      <div className="absolute bottom-0 inset-x-0 h-[3px] bg-white/10 pointer-events-none">
-        <div
-          className="h-full transition-all duration-500 ease-out"
-          style={{
-            width: `${((idx + 1) / totalChapters) * 100}%`,
-            background: `linear-gradient(90deg, #d62027 0%, ${chapter.accent} 70%, #ffffff 100%)`,
-          }}
-        />
+      {/* ── CHAPTER PROGRESS STRIP & QUICK CHAPTER SWITCHER ─── */}
+      <div className="border-t border-white/15 bg-white/10 backdrop-blur-md px-4 py-2 flex items-center justify-between gap-3 text-xs font-mono z-20">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
+          {CHAPTERS.map((c, i) => {
+            const isCurrent = i === idx
+            return (
+              <button
+                key={c.num}
+                onClick={() => {
+                  const diff = i - idx
+                  if (diff > 0) {
+                    for (let step = 0; step < diff; step++) goNext()
+                  } else if (diff < 0) {
+                    for (let step = 0; step < Math.abs(diff); step++) goPrev()
+                  }
+                }}
+                className={`px-2.5 py-1 rounded-lg text-[9.5px] uppercase font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  isCurrent
+                    ? 'bg-[#d62027] text-white shadow-[0_2px_12px_rgba(214,32,39,0.4)]'
+                    : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'
+                }`}
+              >
+                <span>Ch {c.num}</span>
+                <span className="hidden md:inline ml-1 opacity-75">• {c.title}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <span className="text-[10px] text-white/50 uppercase tracking-widest hidden sm:inline flex-shrink-0">
+          Chapter {idx + 1} of {totalChapters}
+        </span>
       </div>
+
     </div>
   )
 }
-
